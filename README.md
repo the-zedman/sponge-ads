@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sponge Ads
 
-## Getting Started
+Self-hosted display ad server. Create ads, get a JavaScript embed snippet, track impressions and clicks.
 
-First, run the development server:
+Built with Next.js 16, Clerk, Neon Postgres, and Vercel Blob — deployed on Vercel.
+
+## Setup
+
+### 1. Clone and install
+
+```bash
+git clone https://github.com/the-zedman/sponge-ads
+cd sponge-ads
+npm install
+```
+
+### 2. Create services
+
+- **Clerk** — create a free account at [clerk.com](https://clerk.com), create an application, copy your keys
+- **Vercel** — import this repo at [vercel.com/new](https://vercel.com/new)
+  - Add **Neon Postgres** storage integration
+  - Add **Blob** storage integration
+
+### 3. Environment variables
+
+Copy `.env.local.example` to `.env.local` and fill in all values:
+
+```bash
+cp .env.local.example .env.local
+```
+
+Pull Vercel env vars locally:
+
+```bash
+vercel env pull .env.local
+```
+
+Then add your Clerk keys manually to `.env.local`.
+
+### 4. Initialize the database
+
+Once your app is running, POST to the setup endpoint once:
+
+```bash
+curl -X POST http://localhost:3000/api/setup \
+  -H "Cookie: <your-auth-cookie>"
+```
+
+Or visit the dashboard while logged in and open the browser console:
+
+```js
+fetch('/api/setup', { method: 'POST' })
+```
+
+### 5. Run locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Embedding ads
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Each ad has a unique embed snippet. Copy it from the ad's detail page and paste it into any HTML page:
 
-## Learn More
+```html
+<!-- Sponge Ad -->
+<div id="sponge-ad-YOUR_AD_ID"></div>
+<script async src="https://sponge.net/api/serve/YOUR_AD_ID"></script>
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Ad sizes supported
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Size | Dimensions |
+|------|-----------|
+| Medium Rectangle | 300×250 |
+| Leaderboard | 728×90 |
+| Half Page | 300×600 |
+| Wide Skyscraper | 160×600 |
+| Mobile Banner | 320×50 |
+| Banner | 468×60 |
+| Large Rectangle | 336×280 |
