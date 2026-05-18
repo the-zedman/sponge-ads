@@ -19,5 +19,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
   sql`INSERT INTO clicks (ad_id, referrer, ip_address, user_agent) VALUES (${id}, ${referrer}, ${ip}, ${ua})`.catch(() => {});
 
-  return Response.redirect(String(ad.destination_url), 302);
+  return new Response(null, {
+    status: 302,
+    headers: { Location: String(ad.destination_url) },
+  });
 }
