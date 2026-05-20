@@ -25,6 +25,11 @@ location ${PROXY_PATH}/ {
     proxy_set_header Host ads.sponge.net;
 }`,
 
+  Apache: `# .htaccess or VirtualHost config
+SSLProxyEngine on
+ProxyPass /sponge-proxy/ https://ads.sponge.net/
+ProxyPassReverse /sponge-proxy/ https://ads.sponge.net/`,
+
   Cloudflare: `// Cloudflare Pages _worker.js or Pages Function
 export async function onRequest({ request, next }) {
   const url = new URL(request.url);
